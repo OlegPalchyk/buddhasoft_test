@@ -1,0 +1,51 @@
+[
+  {
+    "id": 0,
+    "title": "Some Item 1",
+    "price": 1000,
+    "url": "http://lorempixel.com/400/200/technics/0/"
+  },
+  {
+    "id": 1,
+    "title": "Some Item 2",
+    "price": 500,
+    "url": "http://lorempixel.com/400/200/technics/1/"
+  },
+  {
+    "id": 2,
+    "title": "Some Item 3",
+    "price": 600,
+    "url": "http://lorempixel.com/400/200/technics/2/"
+  },
+  {
+    "id": 3,
+    "title": "Some Item 3",
+    "price": 700,
+    "url": "http://lorempixel.com/400/200/technics/3/"
+  },
+  {
+    "id": 4,
+    "title": "Some Item 4",
+    "price": 700,
+    "url": "http://lorempixel.com/400/200/technics/4/"
+  },
+  {
+    "id": 5,
+    "title": "Some Item 4",
+    "price": 700,
+    "url": "http://lorempixel.com/400/200/technics/5/"
+  },
+  {
+    "id": 6,
+    "title": "Some Item 5",
+    "price": 55,
+    "url": "http://lorempixel.com/400/200/technics/6/"
+  },
+  {
+    "id": 7,
+    "title": "Some Item 6",
+    "price": 200,
+    "url": "http://lorempixel.com/400/200/technics/7/"
+  }
+
+]
