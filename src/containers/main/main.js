@@ -9,9 +9,9 @@ class Main extends Component {
     return (
         <main>
             <Switch>
-                <Route exact path='/' component={Home}/>
-                <Route path='/item' component={Item}/>
-                <Route path='/create-item' component={CreateItem}/>
+                <Route exact path={'/'} component={Home}/>
+                <Route exact path='/item' component={Item}/>
+                <Route exact path='/create-item' component={CreateItem}/>
             </Switch>
         </main>
     );
