@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import Item from "../../components/main/listItem/item";
-import items from '../../jsons/items.json';
+import {connect} from "react-redux";
 import './home.css';
 import { Link } from 'react-router-dom';
 
@@ -8,9 +8,10 @@ class Home extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      items : items
+      items : this.props.products.items || []
     };
   }
+
 
   render() {
     return (
@@ -23,4 +24,14 @@ class Home extends Component {
   }
 }
 
-export default Home;
+
+function mapStateToProps(state) {
+  const { products } = state;
+  return {
+    products
+  }
+
+
+}
+
+export default connect(mapStateToProps)(Home);

@@ -1,7 +1,10 @@
 import React, {Component} from 'react';
-import { Button, FormControl, HelpBlock, ControlLabel, FormGroup} from 'react-bootstrap';
-import items from '../../jsons/items.json';
-const  FieldGroup= ({ id, label, help, ...props })=> {
+import {Button, FormControl, HelpBlock, ControlLabel, FormGroup} from 'react-bootstrap';
+import {connect} from "react-redux";
+import {addItem, ADD_PRODUCT_SUCCESS} from "../../actions/products";
+import './createItem.css';
+
+const FieldGroup = ({id, label, help, ...props})=> {
     return (
         <FormGroup controlId={id}>
             <ControlLabel>{label}</ControlLabel>
@@ -14,29 +17,26 @@ class CreateItem extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            title : "",
-            price : "",
-            description :"",
+            title: "",
+            price: "",
+            description: "",
             file: ""
         }
     }
 
-    addItem(e){
+    addItem(e) {
 
         e.preventDefault();
         let newItem = {
-            "id": 10,
             "title": this.state.title,
             "price": +this.state.price,
             "url": this.state.file,
-            "description" : this.state.description
-
-
+            "description": this.state.description
         };
-        items.push(newItem);
-
+        this.props.dispatch(addItem(newItem));
     }
-    handleChange(event){
+
+    handleChange(event) {
 
         const target = event.target;
         const value = target.type === 'checkbox' ? target.checked : target.value;
@@ -46,18 +46,24 @@ class CreateItem extends Component {
             [name]: value
         });
     }
-    readFile(event){
+
+    readFile(event) {
         let reader = new FileReader();
         let file = event.target.files[0];
         reader.onload = (file)=> {
-           this.setState({
-               file : file.target.result
-           })
+            this.setState({
+                file: file.target.result
+            })
         };
 
         reader.readAsDataURL(file);
     }
 
+    componentWillReceiveProps(nextProps){
+        if(nextProps.products.type === ADD_PRODUCT_SUCCESS){
+            this.props.history.push(`/products/${nextProps.products.lastAddedItemId}`);
+        }
+    }
     render() {
         return (
             <div className="create-item">
@@ -68,7 +74,9 @@ class CreateItem extends Component {
                         label="Text"
                         placeholder="Enter text"
                         name="title"
-                        onChange={(e)=>{this.handleChange(e)}}
+                        onChange={(e)=> {
+                            this.handleChange(e)
+                        }}
 
                     />
                     <FieldGroup
@@ -77,7 +85,9 @@ class CreateItem extends Component {
                         type="text"
                         placeholder="Enter price"
                         name="price"
-                        onChange={(e)=>{this.handleChange(e)}}
+                        onChange={(e)=> {
+                            this.handleChange(e)
+                        }}
 
                     />
                     <FieldGroup
@@ -86,13 +96,17 @@ class CreateItem extends Component {
                         label="File"
                         help="Example block-level help text here."
                         name="file"
-                        onChange={(e)=>{this.readFile(e)}}
+                        onChange={(e)=> {
+                            this.readFile(e)
+                        }}
                     />
 
                     <FormGroup controlId="formControlsTextarea">
                         <ControlLabel>Textarea</ControlLabel>
                         <FormControl componentClass="textarea" placeholder="textarea" name="description"
-                                     onChange={(e)=>{this.handleChange(e)}}/>
+                                     onChange={(e)=> {
+                                         this.handleChange(e)
+                                     }}/>
                     </FormGroup>
 
 
@@ -105,4 +119,11 @@ class CreateItem extends Component {
     }
 }
 
-export default CreateItem;
+function mapStateToProps(state) {
+    const {products} = state;
+    return {
+        products
+    }
+}
+
+export default connect(mapStateToProps)(CreateItem);
