@@ -18,7 +18,7 @@ class Header extends Component {
                     <LinkContainer to="/">
                         <NavItem eventKey={1}>Home</NavItem>
                     </LinkContainer>
-                    <LinkContainer to="create-item">
+                    <LinkContainer to="/create-item">
                         <NavItem eventKey={2}>Create Item</NavItem>
                     </LinkContainer>
                 </Nav>

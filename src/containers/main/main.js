@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import {  Route, Switch } from 'react-router'
 import Home from '../home/home';
-import Item from '../item/item';
+import Item from '../item-page/item';
 import CreateItem from '../createItem/createItem';
 
 class Main extends Component {
