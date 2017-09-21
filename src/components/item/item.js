@@ -1,16 +1,19 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { Grid, Col} from 'react-bootstrap';
+import { Grid, Col, Image, Button} from 'react-bootstrap';
 
 
-const Item = ({item}) => {
+const Item = ({item, deleteItem}) => {
     const {title, price, url , description} = item;
      return (
          <Grid>
              <Col xs={12} md={4} lg={3} >
-                 <img className="single-item-image" src={url} alt=""/>
+                 <Image src={url} thumbnail />
              </Col>
              <Col xs={12} md={8} lg={9}>
+                 <div className="buttons-wrapper">
+                     <Button bsStyle="danger" onClick={()=>deleteItem()}>Delete</Button>
+                 </div>
                  <p className="single-item-title">{title}</p>
                  <p className="single-item-price">{price +" "} $</p>
                  <p className="single-item-description">{description} $</p>
@@ -27,7 +30,8 @@ Item.propTypes = {
         price: PropTypes.number.isRequired,
         description : PropTypes.string.isRequired
 
-    }).isRequired
+    }).isRequired,
+    deleteItem : PropTypes.func.isRequired,
 };
 
 export default Item;
