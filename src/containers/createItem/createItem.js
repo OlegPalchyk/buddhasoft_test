@@ -140,6 +140,7 @@ class CreateItem extends Component {
                         onChange={(e)=> {
                             this.handleChange(e)
                         }}
+                        maxLength={20}
                         validationState={'title' in this.state.errorFields? this.state.errorFields.title?"warning":"success" : null}
                         help={this.state.errorFields.title?'Required': false}
                     />
@@ -149,13 +150,12 @@ class CreateItem extends Component {
                         type="text"
                         placeholder="Enter price"
                         name="price"
+                        maxLength={20}
                         onChange={(e)=> {
                             this.handleChange(e)
                         }}
                         validationState={'price' in this.state.errorFields? this.state.errorFields.price?"warning":"success" : null}
                         help={this.state.errorFields.price?'Required and can contain only numbers': false}
-
-
                     />
                     <FieldGroup
                         id="formControlsFile"
@@ -168,18 +168,15 @@ class CreateItem extends Component {
                         }}
                         help={this.state.errorFields.file?'Image is required and max size is 3mb': false}
                         validationState={'price' in this.state.errorFields? this.state.errorFields.file?"warning":"success" : null}
-
                     />
                     <FormGroup controlId="formControlsTextarea" validationState={'description' in this.state.errorFields? this.state.errorFields.description?"warning":"success" : null}>
                         <ControlLabel>Description</ControlLabel>
-                        <FormControl componentClass="textarea" placeholder="Enter description" name="description"
+                        <FormControl maxLength={256} componentClass="textarea" placeholder="Enter description" name="description"
                                      onChange={(e)=> {
                                          this.handleChange(e)
                                      }}
                         />
                         {this.state.errorFields.description?<HelpBlock>{'Required'}</HelpBlock>: null}
-
-
                     </FormGroup>
                     <Button type="submit">
                         Submit
