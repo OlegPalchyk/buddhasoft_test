@@ -1,7 +1,8 @@
 import items from '../jsons/items.json';
 import {
     ADD_PRODUCT_SUCCESS,
-    DELETE_PRODUCT_SUCCESS
+    DELETE_PRODUCT_SUCCESS,
+    UPDATE_PRODUCT_SUCCESS
 } from '../actions/products';
 
 function initializeState() {
@@ -49,6 +50,17 @@ export default function products(state =initializeState(), action = {}) {
             let itemIndex = items.findIndex((item)=>{return item.id ===action.id});
             if(itemIndex!==-1){
                 items.splice(itemIndex, 1);
+            }
+            return Object.assign({}, state, {
+                items,
+                type : action.type,
+            });
+        }
+        case UPDATE_PRODUCT_SUCCESS : {
+            let items = state.items;
+            let itemIndex = items.findIndex((item)=>{return item.id ===action.item.id});
+            if(itemIndex!==-1){
+                items[itemIndex]=action.item;
             }
             return Object.assign({}, state, {
                 items,

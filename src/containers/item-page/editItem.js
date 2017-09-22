@@ -1,8 +1,5 @@
 import React, {Component} from 'react';
-import {Button, FormControl, HelpBlock, ControlLabel, FormGroup} from 'react-bootstrap';
-import {connect} from "react-redux";
-import {addItem, ADD_PRODUCT_SUCCESS} from "../../actions/products";
-import './createItem.css';
+import {Button, FormControl, HelpBlock, ControlLabel, FormGroup, Grid, Col, Image} from 'react-bootstrap';
 const FieldGroup = ({id, label, help, validationState, ...props})=> {
     return (
         <FormGroup controlId={id} validationState={validationState}>
@@ -12,16 +9,18 @@ const FieldGroup = ({id, label, help, validationState, ...props})=> {
         </FormGroup>
     );
 };
-class CreateItem extends Component {
+class EditItem extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            title: "",
-            price: "",
-            description: "",
-            file: "",
+            title: this.props.item.title,
+            id :this.props.item.id,
+            price: this.props.item.price,
+            description: this.props.item.description,
+            file: this.props.item.url,
             showValid: false,
-            errorFields: {}
+            errorFields: {},
+
         }
     }
 
@@ -36,10 +35,18 @@ class CreateItem extends Component {
             errorFields['description'] = true;
             invalid = true;
         }
-        if (this.state.price.match((/^\s*$/)) || this.state.price.length === 0 || !this.state.price.match(/^(\d*([.,](?=\d{3}))?\d+)+((?!\2)[.,]\d\d)?$/)) {
-            errorFields['price'] = true;
-            invalid = true;
+        if(Number.isInteger(this.state.price)){
+            if(this.state.price<0){
+                errorFields['price'] = true;
+                invalid = true;
+            }
+        }else{
+            if (this.state.price.match((/^\s*$/)) || this.state.price.length === 0 || !this.state.price.match(/^(\d*([.,](?=\d{3}))?\d+)+((?!\2)[.,]\d\d)?$/)) {
+                errorFields['price'] = true;
+                invalid = true;
+            }
         }
+
         if (this.state.file.length === 0) {
             errorFields['file'] = true;
             invalid = true;
@@ -47,7 +54,7 @@ class CreateItem extends Component {
         return !invalid ? false : errorFields;
     }
 
-    addItem(e) {
+    updateItem(e) {
         e.preventDefault();
         let a = this.invalidForm();
         if (a) {
@@ -60,9 +67,10 @@ class CreateItem extends Component {
             "title": this.state.title,
             "price": +this.state.price,
             "url": this.state.file,
-            "description": this.state.description
+            "description": this.state.description,
+            id : this.state.id
         };
-        this.props.dispatch(addItem(newItem));
+        this.props.updateItem(newItem)
     }
 
     handleChange(event) {
@@ -78,6 +86,7 @@ class CreateItem extends Component {
                 errorFields[name] = false
             }
         } else {
+
             if (value.match((/^\s*$/)) || value.length === 0 || !value.match(/^(\d*([.,](?=\d{3}))?\d+)+((?!\2)[.,]\d\d)?$/)) {
                 errorFields[name] = true
             } else {
@@ -110,22 +119,19 @@ class CreateItem extends Component {
         reader.readAsDataURL(file);
     }
 
-    componentWillReceiveProps(nextProps) {
-        if (nextProps.products.type === ADD_PRODUCT_SUCCESS) {
-            this.props.history.push(`/products/${nextProps.products.lastAddedItemId}`);
-        }
-    }
+
 
     render() {
         return (
             <div className="create-item">
-                <form method="POST" onSubmit={(e)=>this.addItem(e)} ref="form-control">
+                <form method="POST" onSubmit={(e)=>this.updateItem(e)} ref="form-control">
                     <FieldGroup
                         id="formControlsTitle"
                         type="text"
                         label="Title"
                         placeholder="Enter Title"
                         name="title"
+                        value={this.state.title}
                         onChange={(e)=> {
                             this.handleChange(e)
                         }}
@@ -139,6 +145,7 @@ class CreateItem extends Component {
                         type="text"
                         placeholder="Enter price"
                         name="price"
+                        value={this.state.price}
                         maxLength={20}
                         onChange={(e)=> {
                             this.handleChange(e)
@@ -146,31 +153,45 @@ class CreateItem extends Component {
                         validationState={'price' in this.state.errorFields ? this.state.errorFields.price ? "warning" : "success" : null}
                         help={this.state.errorFields.price ? 'Required and can contain only numbers' : false}
                     />
-                    <FieldGroup
-                        id="formControlsFile"
-                        type="file"
-                        label="File"
-                        name="file"
-                        accept="image/*"
-                        onChange={(e)=> {
-                            this.readFile(e)
-                        }}
-                        help={this.state.errorFields.file ? 'Image is required and max size is 3mb' : false}
-                        validationState={'price' in this.state.errorFields ? this.state.errorFields.file ? "warning" : "success" : null}
-                    />
+
+
+                    <Grid>
+                        <Col xs={12} md={4} lg={3} >
+                            <Image src={this.state.file} thumbnail />
+                        </Col>
+                        <Col xs={12} md={8} lg={9}>
+                            <FieldGroup
+                                id="formControlsFile"
+                                type="file"
+                                label="File"
+                                name="file"
+                                accept="image/*"
+                                onChange={(e)=> {
+                                    this.readFile(e)
+                                }}
+                                help={this.state.errorFields.file ? 'Image is required and max size is 3mb' : false}
+                                validationState={'price' in this.state.errorFields ? this.state.errorFields.file ? "warning" : "success" : null}
+                            />
+                        </Col>
+
+                    </Grid>
                     <FormGroup controlId="formControlsTextarea"
                                validationState={'description' in this.state.errorFields ? this.state.errorFields.description ? "warning" : "success" : null}>
                         <ControlLabel>Description</ControlLabel>
                         <FormControl maxLength={256} componentClass="textarea" placeholder="Enter description"
                                      name="description"
+                                     value={this.state.description}
                                      onChange={(e)=> {
                                          this.handleChange(e)
                                      }}
                         />
                         {this.state.errorFields.description ? <HelpBlock>{'Required'}</HelpBlock> : null}
                     </FormGroup>
+                    <Button type="button" onClick={()=>this.props.cancelEdit()}>
+                        Cancel
+                    </Button>
                     <Button type="submit">
-                        Submit
+                        Update
                     </Button>
                 </form>
 
@@ -179,11 +200,6 @@ class CreateItem extends Component {
     }
 }
 
-function mapStateToProps(state) {
-    const {products} = state;
-    return {
-        products
-    }
-}
 
-export default connect(mapStateToProps)(CreateItem);
+
+export default EditItem;

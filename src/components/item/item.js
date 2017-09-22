@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { Grid, Col, Image, Button} from 'react-bootstrap';
 
 
-const Item = ({item, deleteItem}) => {
+const Item = ({item, deleteItem, editItem}) => {
     const {title, price, url , description} = item;
      return (
          <Grid>
@@ -12,6 +12,7 @@ const Item = ({item, deleteItem}) => {
              </Col>
              <Col xs={12} md={8} lg={9}>
                  <div className="buttons-wrapper">
+                     <Button bsStyle="warning" onClick={()=>editItem()}>Edit</Button>
                      <Button bsStyle="danger" onClick={()=>deleteItem()}>Delete</Button>
                  </div>
                  <p className="single-item-title">{title}</p>
@@ -32,6 +33,7 @@ Item.propTypes = {
 
     }).isRequired,
     deleteItem : PropTypes.func.isRequired,
+    editItem : PropTypes.func.isRequired
 };
 
 export default Item;
